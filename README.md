@@ -58,7 +58,7 @@ choco install ffmpeg
 
 ### Download
 
-Download the latest release for your platform from the [Releases](https://github.com/ivrit-ai/hebrew-transcription/releases) page.
+Download the latest release for your platform from the [Releases](https://github.com/OriPekelman/ivrit_ai_gui/releases) page.
 
 ## Quick Start
 
@@ -219,8 +219,8 @@ Speaker 2: בסדר גמור, תודה!
 
 ```bash
 # Clone the repository
-git clone https://github.com/ivrit-ai/hebrew-transcription.git
-cd hebrew-transcription
+git clone https://github.com/OriPekelman/ivrit_ai_gui.git
+cd ivrit_ai_gui
 
 # Build (macOS or Linux)
 ./scripts/build.sh
@@ -364,8 +364,8 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/ivrit-ai/hebrew-transcription/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/ivrit-ai/hebrew-transcription/discussions)
+- **Issues**: [GitHub Issues](https://github.com/OriPekelman/ivrit_ai_gui/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/OriPekelman/ivrit_ai_gui/discussions)
 - **Support ivrit.ai**: [Patreon](https://patreon.com/ivrit_ai)
 
 ## License

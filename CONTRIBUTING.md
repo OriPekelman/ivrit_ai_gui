@@ -46,8 +46,8 @@ Feature requests are welcome! Please:
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/hebrew-transcription.git
-cd hebrew-transcription
+git clone https://github.com/OriPekelman/ivrit_ai_gui.git
+cd ivrit_ai_gui
 
 # Install dependencies
 brew install whisper-cpp ffmpeg  # macOS
@@ -183,8 +183,8 @@ Maintainers only:
 
 ## Questions?
 
-- **Issues**: https://github.com/ivrit-ai/hebrew-transcription/issues
-- **Discussions**: https://github.com/ivrit-ai/hebrew-transcription/discussions
+- **Issues**: https://github.com/OriPekelman/ivrit_ai_gui/issues
+- **Discussions**: https://github.com/OriPekelman/ivrit_ai_gui/discussions
 - **ivrit.ai**: https://ivrit.ai
 
 Thank you for contributing! 🙏
