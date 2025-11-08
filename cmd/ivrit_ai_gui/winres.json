@@ -1,0 +1,57 @@
+{
+  "RT_GROUP_ICON": {
+    "APP": {
+      "0000": [
+        "../../icons/icon.ico"
+      ]
+    }
+  },
+  "RT_MANIFEST": {
+    "#1": {
+      "0409": {
+        "identity": {
+          "name": "Ivrit.AI Hebrew Transcription",
+          "version": "1.0.0.0"
+        },
+        "description": "Hebrew Audio Transcription Tool",
+        "minimum-os": "win7",
+        "execution-level": "asInvoker",
+        "ui-access": false,
+        "auto-elevate": false,
+        "dpi-awareness": "permonitorv2,permonitor",
+        "disable-theming": false,
+        "disable-window-filtering": false,
+        "high-resolution-scrolling-aware": true,
+        "ultra-high-resolution-scrolling-aware": true,
+        "long-path-aware": true,
+        "printer-driver-isolation": true,
+        "gdi-scaling": true,
+        "segment-heap": true,
+        "use-common-controls-v6": true
+      }
+    }
+  },
+  "RT_VERSION": {
+    "#1": {
+      "0000": {
+        "fixed": {
+          "file_version": "1.0.0.0",
+          "product_version": "1.0.0.0"
+        },
+        "info": {
+          "0409": {
+            "Comments": "Hebrew transcription using ivrit.ai models",
+            "CompanyName": "ivrit.ai",
+            "FileDescription": "Hebrew Audio Transcription",
+            "FileVersion": "1.0.0",
+            "InternalName": "ivrit_ai_gui",
+            "LegalCopyright": "MIT License",
+            "OriginalFilename": "ivrit_ai_gui.exe",
+            "ProductName": "Ivrit.AI Hebrew Transcription",
+            "ProductVersion": "1.0.0"
+          }
+        }
+      }
+    }
+  }
+}

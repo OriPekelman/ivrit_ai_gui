@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ivrit.AI Transcription
+GenericName=Hebrew Audio Transcription
+Comment=Transcribe Hebrew audio and video files using Whisper
+Icon=ivrit-ai-transcription
+Exec=ivrit_ai
+Terminal=false
+Categories=AudioVideo;Audio;Recorder;
+Keywords=transcription;hebrew;whisper;audio;video;subtitles;
+StartupNotify=true
+MimeType=audio/mpeg;audio/x-wav;audio/mp4;video/mp4;video/x-matroska;

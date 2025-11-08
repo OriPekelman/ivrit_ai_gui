@@ -1,0 +1,22 @@
+{
+  "models": {
+    "large-v3": {
+      "id": "ivrit-ai/whisper-large-v3-ggml",
+      "file": "ggml-model.bin",
+      "localFileName": "ggml-large-v3-ivrit.bin",
+      "description": "Ivrit.ai Large v3 - Best quality for Hebrew"
+    },
+    "turbo": {
+      "id": "ivrit-ai/whisper-large-v3-turbo-ggml",
+      "file": "ggml-model.bin",
+      "localFileName": "ggml-large-v3-turbo-ivrit.bin",
+      "description": "Ivrit.ai Turbo - Faster with good quality"
+    },
+    "base": {
+      "id": "ggerganov/whisper.cpp",
+      "file": "ggml-base.bin",
+      "localFileName": "ggml-base.bin",
+      "description": "Base model - Fast but lower quality"
+    }
+  }
+}

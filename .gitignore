@@ -1,0 +1,44 @@
+# Binaries
+ivrit_ai
+ivrit_ai.exe
+HebrewTranscription-native
+HebrewTranscription-native.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build artifacts
+/build/
+/dist/
+/releases/
+
+# Windows resources (auto-generated)
+cmd/ivrit_ai_gui/rsrc_*.syso
+icons/icon.iconset/
+
+# Go build cache
+*.test
+*.out
+*.prof
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local config
+.claude/
+
+# Models (too large for git)
+*.bin
+models/*.bin
+
+# Logs
+*.log
