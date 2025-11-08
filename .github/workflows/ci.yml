@@ -80,16 +80,22 @@ jobs:
         run: go build -v ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
+          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
+          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Run tests
         run: go test -v ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
+          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
+          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Run tests with coverage
         run: go test -cover -coverprofile=coverage.out ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
+          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
+          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest'

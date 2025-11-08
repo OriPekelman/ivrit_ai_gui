@@ -32,6 +32,8 @@ jobs:
           go build -o ivrit_ai-macos-amd64 ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
+          CGO_CFLAGS: -I/opt/homebrew/include
+          CGO_LDFLAGS: -L/opt/homebrew/lib -lwhisper -lggml -lggml-base
 
       - name: Create macOS app bundle (optional)
         run: |
@@ -169,17 +171,21 @@ jobs:
         with:
           update: true
           install: >-
+            git
             mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-ffmpeg
 
       - name: Build whisper.cpp
         shell: msys2 {0}
         run: |
-          git clone https://github.com/ggerganov/whisper.cpp.git /tmp/whisper
+          git clone --depth 1 https://github.com/ggerganov/whisper.cpp.git /tmp/whisper
           cd /tmp/whisper
-          make
-          make install
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
+          cmake --build build
+          cmake --install build --prefix /mingw64
 
       - name: Generate Windows resources
         shell: msys2 {0}
