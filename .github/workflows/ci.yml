@@ -70,6 +70,13 @@ jobs:
         run: |
           brew install whisper-cpp ffmpeg
 
+      - name: Set macOS CGO flags
+        if: runner.os == 'macOS'
+        run: |
+          WHISPER_PREFIX=$(brew --prefix whisper-cpp)
+          echo "CGO_CFLAGS=-I${WHISPER_PREFIX}/include -I${WHISPER_PREFIX}/libexec/include" >> $GITHUB_ENV
+          echo "CGO_LDFLAGS=-L${WHISPER_PREFIX}/lib -L${WHISPER_PREFIX}/libexec/lib -lwhisper -lggml -lggml-base" >> $GITHUB_ENV
+
       - name: Download dependencies
         run: go mod download
 
@@ -77,29 +84,21 @@ jobs:
         run: go vet ./...
         env:
           CGO_ENABLED: 1
-          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
-          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Build
         run: go build -v ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
-          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
-          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Run tests
         run: go test -v ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
-          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
-          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Run tests with coverage
         run: go test -cover -coverprofile=coverage.out ./cmd/ivrit_ai_gui
         env:
           CGO_ENABLED: 1
-          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
-          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest'
