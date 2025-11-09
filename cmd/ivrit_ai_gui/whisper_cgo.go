@@ -33,17 +33,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime/cgo"
 	"sync"
 	"sync/atomic"
 	"time"
 	"unsafe"
-)
-
-// Callback registry to pass Go functions to C callbacks
-var (
-	callbackRegistry      = make(map[uintptr]*transcriptionCallbacks)
-	callbackRegistryMutex sync.RWMutex
-	callbackIDCounter     uintptr = 1
 )
 
 type transcriptionCallbacks struct {
@@ -56,9 +50,11 @@ type transcriptionCallbacks struct {
 
 //export whisper_new_segment_callback_go
 func whisper_new_segment_callback_go(ctx *C.struct_whisper_context, state *C.struct_whisper_state, nNew C.int, userData unsafe.Pointer) {
-	callbackID := uintptr(userData)
+	// Convert unsafe.Pointer back to cgo.Handle
+	h := cgo.Handle(uintptr(userData))
+	callbacks := h.Value().(*transcriptionCallbacks)
 
-	// Get all C data FIRST, before locking
+	// Get all C data FIRST
 	nSegments := int(C.whisper_full_n_segments(ctx))
 	if nSegments == 0 {
 		return
@@ -77,11 +73,7 @@ func whisper_new_segment_callback_go(ctx *C.struct_whisper_context, state *C.str
 	textPtr := C.whisper_full_get_segment_text(ctx, C.int(lastIdx))
 	text := C.GoString(textPtr)
 
-	// NOW lock and update Go state
-	callbackRegistryMutex.Lock()
-	callbacks, ok := callbackRegistry[callbackID]
-	if !ok || callbacks == nil || callbacks.segmentCallback == nil {
-		callbackRegistryMutex.Unlock()
+	if callbacks.segmentCallback == nil {
 		return
 	}
 
@@ -96,24 +88,19 @@ func whisper_new_segment_callback_go(ctx *C.struct_whisper_context, state *C.str
 		Speaker: callbacks.currentSpeaker,
 	}
 
-	cb := callbacks.segmentCallback
-	callbackRegistryMutex.Unlock()
-
-	// Call callback outside of lock
-	cb(segment)
+	// Call callback
+	callbacks.segmentCallback(segment)
 }
 
 //export whisper_progress_callback_go
 func whisper_progress_callback_go(ctx *C.struct_whisper_context, state *C.struct_whisper_state, progress C.int, userData unsafe.Pointer) {
-	callbackID := uintptr(userData)
+	// Convert unsafe.Pointer back to cgo.Handle
+	h := cgo.Handle(uintptr(userData))
+	callbacks := h.Value().(*transcriptionCallbacks)
 
 	// CRITICAL: Only use atomic operations here - no allocations, no function calls
 	// Any allocation can trigger GC which can move memory C code is using
-	callbackRegistryMutex.RLock()
-	callbacks, ok := callbackRegistry[callbackID]
-	callbackRegistryMutex.RUnlock()
-
-	if ok && callbacks != nil && callbacks.progressPercent != nil {
+	if callbacks != nil && callbacks.progressPercent != nil {
 		// Atomic write only - safe from C callback
 		atomic.StoreInt32(callbacks.progressPercent, int32(progress))
 	}
@@ -288,29 +275,28 @@ func (e *WhisperCGOEngine) TranscribeWithTranslation(audioPath string, modelID s
 	// Set up safe progress tracking using atomic variables
 	// C callback writes to atomic (no allocations), Go goroutine reads and updates UI
 	var progressPercent int32
-	var callbackID uintptr
+	var handle cgo.Handle
 
 	if progressCallback != nil {
-		callbackRegistryMutex.Lock()
-		callbackID = callbackIDCounter
-		callbackIDCounter++
-		callbackRegistry[callbackID] = &transcriptionCallbacks{
+		callbacks := &transcriptionCallbacks{
 			ctx:             e.model.ctx,
 			progressPercent: &progressPercent,
 		}
-		callbackRegistryMutex.Unlock()
+		handle = cgo.NewHandle(callbacks)
 
 		// Set progress callback in params
 		params.progress_callback = C.whisper_progress_callback(C.whisper_progress_callback_go)
-		params.progress_callback_user_data = unsafe.Pointer(callbackID)
+		// Cast handle to unsafe.Pointer for C. This is the correct way to pass cgo.Handle
+		// through C code per the official cgo.Handle documentation. Go vet may warn about
+		// this conversion, but it is safe because cgo.Handle keeps the value alive.
+		h := uintptr(handle)
+		params.progress_callback_user_data = *(*unsafe.Pointer)(unsafe.Pointer(&h))
 	}
 
-	// Cleanup callback registration
+	// Cleanup callback handle
 	defer func() {
-		if callbackID != 0 {
-			callbackRegistryMutex.Lock()
-			delete(callbackRegistry, callbackID)
-			callbackRegistryMutex.Unlock()
+		if handle != 0 {
+			handle.Delete()
 		}
 	}()
 
