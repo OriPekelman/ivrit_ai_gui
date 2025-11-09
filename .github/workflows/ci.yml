@@ -75,6 +75,10 @@ jobs:
 
       - name: Run go vet
         run: go vet ./...
+        env:
+          CGO_ENABLED: 1
+          CGO_CFLAGS: ${{ runner.os == 'macOS' && '-I/opt/homebrew/include' || '' }}
+          CGO_LDFLAGS: ${{ runner.os == 'macOS' && '-L/opt/homebrew/lib -lwhisper -lggml -lggml-base' || '' }}
 
       - name: Build
         run: go build -v ./cmd/ivrit_ai_gui
