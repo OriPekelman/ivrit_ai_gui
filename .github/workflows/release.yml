@@ -197,7 +197,7 @@ jobs:
           export PATH="$(echo /c/hostedtoolcache/windows/go/1.21*/x64)/bin:/mingw64/bin:$PATH"
           go install github.com/tc-hib/go-winres@latest
           cd cmd/ivrit_ai_gui
-          ~/go/bin/go-winres make
+          $(go env GOPATH)/bin/go-winres make
 
       - name: Build
         shell: msys2 {0}
