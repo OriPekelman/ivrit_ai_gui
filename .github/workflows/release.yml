@@ -194,7 +194,7 @@ jobs:
       - name: Generate Windows resources
         shell: msys2 {0}
         run: |
-          export PATH="/c/hostedtoolcache/windows/go/1.21*/x64/bin:/mingw64/bin:$PATH"
+          export PATH="$(echo /c/hostedtoolcache/windows/go/1.21*/x64)/bin:/mingw64/bin:$PATH"
           go install github.com/tc-hib/go-winres@latest
           cd cmd/ivrit_ai_gui
           ~/go/bin/go-winres make
@@ -202,7 +202,7 @@ jobs:
       - name: Build
         shell: msys2 {0}
         run: |
-          export PATH="/c/hostedtoolcache/windows/go/1.21*/x64/bin:/mingw64/bin:$PATH"
+          export PATH="$(echo /c/hostedtoolcache/windows/go/1.21*/x64)/bin:/mingw64/bin:$PATH"
           go mod download
           go build -o ivrit_ai-windows-amd64.exe ./cmd/ivrit_ai_gui
         env:
